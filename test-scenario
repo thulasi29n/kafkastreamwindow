@@ -1,0 +1,15 @@
+Suppose countSize is 1,000,000 and triggerTime is 16:30.
+
+Scenario 1: Record Count Reaches Threshold Before the Cutoff Time
+
+Let's say that it's 12:00 when you start processing records. The recordCount is 0. As you process each record, the recordCount is incremented. Eventually, at say 14:00, recordCount reaches countSize (1,000,000). The processor forwards "endOfBatch", null and recordCount is reset to 0.
+
+Now, let's say that by the time it hits 16:30 (the triggerTime), recordCount has only reached 500,000. Even though you haven't hit the countSize threshold, the processor forwards "endOfBatch", null because it's the triggerTime. The recordCount remains at 500,000.
+
+Scenario 2: Cutoff Time is Reached Before Record Count Threshold
+
+Let's say you start processing at 12:00, but this time the records are coming in slower. By the time it hits 16:30, recordCount is only at 750,000. Even though you haven't hit the countSize threshold, the processor forwards "endOfBatch", null because it's the triggerTime. The recordCount remains at 750,000.
+
+Then, at say 18:00, recordCount finally hits countSize. The processor forwards "endOfBatch", null and recordCount is reset to 0.
+
+In both scenarios, "endOfBatch", null is forwarded at least once a day at the triggerTime, and also whenever the recordCount hits countSize. The important point is that the time and count thresholds operate independently. As soon as either condition is met, an end of batch marker is sent. The count does not reset when the triggerTime is reached, and the triggerTime does not change when the countSize is reached.
