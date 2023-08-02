@@ -1,0 +1,1 @@
+oc logs -n knative-eventing $(oc get pods -n knative-eventing -l app=eventing-controller -o jsonpath='{.items[0].metadata.name}') eventing-controller
