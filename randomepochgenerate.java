@@ -1,15 +1,17 @@
 import java.time.*;
-import java.time.temporal.ChronoUnit;
 import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
-        LocalDate randomDate = generateRandomDate(LocalDate.of(1990, 1, 1), LocalDate.now());
-        System.out.println("Random date: " + randomDate);
-        
+        String epochTimeStr = generateRandomDateAndConvertToEpoch(LocalDate.of(1990, 1, 1), LocalDate.now());
+        System.out.println("Epoch timestamp: " + epochTimeStr);
+    }
+
+    private static String generateRandomDateAndConvertToEpoch(LocalDate minDate, LocalDate maxDate) {
+        LocalDate randomDate = generateRandomDate(minDate, maxDate);
         Instant instant = randomDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
         long epochTime = instant.getEpochSecond();
-        System.out.println("Epoch timestamp: " + epochTime);
+        return Long.toString(epochTime);
     }
 
     private static LocalDate generateRandomDate(LocalDate minDate, LocalDate maxDate) {
