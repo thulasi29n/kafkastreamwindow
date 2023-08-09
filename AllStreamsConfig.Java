@@ -79,3 +79,39 @@ public class KafkaConfig {
         return props;
     }
 }
+
+
+import org.apache.kafka.streams.StreamsConfig;
+import org.apache.kafka.streams.errors.DefaultProductionExceptionHandler;
+
+import java.util.Properties;
+
+public class KafkaStreamsConfiguration {
+
+    public Properties getStreamProperties() {
+        Properties properties = new Properties();
+
+        // Basic Kafka Streams configurations
+        properties.put(StreamsConfig.APPLICATION_ID_CONFIG, "your-application-id");
+        properties.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "your-bootstrap-servers");
+
+        // Set the Default Production Exception Handler
+        properties.put(StreamsConfig.DEFAULT_PRODUCTION_EXCEPTION_HANDLER_CLASS_CONFIG, 
+                       DefaultProductionExceptionHandler.class.getName());
+
+        // Configure the Exception Handler to CONTINUE on exceptions
+        properties.put(DefaultProductionExceptionHandler.ProductionExceptionHandlerConfig.RESPONSE_CLASS_CONFIG, 
+                       DefaultProductionExceptionHandler.ProductionExceptionHandlerResponse.CONTINUE.toString());
+
+        // ... add other necessary Kafka Streams configurations ...
+
+        return properties;
+    }
+
+    public static void main(String[] args) {
+        KafkaStreamsConfiguration config = new KafkaStreamsConfiguration();
+        Properties streamsProperties = config.getStreamProperties();
+
+        // Use streamsProperties to initialize and start your Kafka Streams application
+    }
+}
