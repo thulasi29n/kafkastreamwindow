@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-rocksdb-pvc
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: "{{ .Values.storage.className }}"
+  resources:
+    requests:
+      storage: {{ .Values.storage.size }}
+
+
+storage:
+  className: gp3
+  size: 100Gi
+
+
+
+# ... (rest of StatefulSet definition)
+  template:
+    spec:
+      containers:
+      - name: your-app-container-name
+        # ... other container specs ...
+        volumeMounts:
+        - name: rocksdb-volume
+          mountPath: /path/in/container  # The path where RocksDB will write data
+      volumes:
+      - name: rocksdb-volume
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-rocksdb-pvc
+
+
