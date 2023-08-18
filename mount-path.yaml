@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: my-statefulset
+spec:
+  serviceName: "my-service"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      initContainers:
+      - name: init-chown-data
+        image: busybox
+        command: ["sh", "-c", "chown -R 1001:1001 /mnt/kafka-streams"]
+        volumeMounts:
+        - name: data
+          mountPath: /mnt/kafka-streams
+      containers:
+      - name: main-container
+        image: my-image
+        volumeMounts:
+        - name: data
+          mountPath: /mnt/kafka-streams
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: my-pvc
