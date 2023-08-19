@@ -35,3 +35,20 @@ public class ThroughputLogger {
         currentCount.incrementAndGet();
     }
 }
+
+
+Thread loggingThread = new Thread(() -> {
+    while (true) {
+        try {
+            Thread.sleep(5000);  // Adjust to your preferred logging interval
+        } catch (InterruptedException e) {
+            // Handle interruption if needed
+        }
+        throughputLogger.log();
+    }
+});
+
+loggingThread.start();
+
+// Start the Kafka Streams application
+kafkaStreams.start();
