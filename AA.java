@@ -50,3 +50,17 @@ public class TransactionAccumulator implements ValueTransformer<KeyValue<Transac
         // Cleanup logic if needed
     }
 }
+
+
+KStream<String, KeyValue<Transaction, Regulator>> joinedStream = transactionStream.join(
+    regulatorTable,
+    (transactionKey, transaction) -> transaction.getRegulatorId(),
+    (transaction, regulator) -> new KeyValue<>(transaction, regulator)
+);
+
+KStream<String, Transaction> processedStream = joinedStream.transformValues(new TransactionAccumulator());
+
+processedStream.to("output-topic");
+
+
+
