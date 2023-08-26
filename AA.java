@@ -64,3 +64,4 @@ processedStream.to("output-topic");
 
 
 
+he challenge arises because the nature of Kafka Streams and its underlying abstractions don't allow the passage of values directly to the init() method of a Processor. The init() method is called upon processor instantiation, before any records are processed.
