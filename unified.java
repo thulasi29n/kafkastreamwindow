@@ -66,6 +66,16 @@ public class StateStoreController {
 }
 
 
+// Assume you have these Serdes
+Serde<Regulator> regulatorSerde = ...;  // Obtain or create a Serde for your Regulator class
+Serde<String> stringSerde = Serdes.String();
+
+// Use them in the Materialized definition
+builder.table("Regulator", Materialized.<String, Regulator, KeyValueStore<Bytes, byte[]>>as("my-table")
+        .withKeySerde(stringSerde)
+        .withValueSerde(regulatorSerde));
+
+
 @RestController
 class KeyValueStoreController {
 
