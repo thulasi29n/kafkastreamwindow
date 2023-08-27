@@ -37,6 +37,36 @@ public class UnifiedApp {
 }
 
 @RestController
+@RequestMapping("/statestore")
+public class StateStoreController {
+
+    private final KafkaStreams kafkaStreams;
+
+    @Autowired
+    public StateStoreController(KafkaStreams kafkaStreams) {
+        this.kafkaStreams = kafkaStreams;
+    }
+
+    @GetMapping("/get/{key}")
+    public ResponseEntity<String> getValue(@PathVariable String key) {
+        try {
+            ReadOnlyKeyValueStore<String, String> keyValueStore = 
+                kafkaStreams.store(StoreQueryParameters.fromNameAndType("my-table", QueryableStoreTypes.keyValueStore()));
+
+            String value = keyValueStore.get(key);
+            if (value != null) {
+                return new ResponseEntity<>(value, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Key not found in state store", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+}
+
+
+@RestController
 class KeyValueStoreController {
 
     @Autowired
