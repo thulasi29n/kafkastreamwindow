@@ -48,3 +48,9 @@ class KeyValueStoreController {
         return store.get(key);
     }
 }
+
+
+StoreQueryParameters<ReadOnlyKeyValueStore<String, String>> storeQueryParameters = 
+    StoreQueryParameters.fromNameAndType("my-table", QueryableStoreTypes.keyValueStore());
+
+ReadOnlyKeyValueStore<String, String> store = streams.store(storeQueryParameters);
