@@ -176,3 +176,40 @@ class HydrationCheckProcessor implements Processor<String, Value1> {
     public void close() {}
 
 }
+public class OffsetInfo {
+    private long offset;
+    private int partition;
+
+    // Constructors, getters, setters, etc.
+}
+@Component
+public class HydrationInitializer {
+
+    @Autowired
+    private StreamsBuilderFactoryBean streamsBuilderBean;
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void onStartup() {
+        StreamsBuilder builder = streamsBuilderBean.getObject();
+        Map<String, Object> kafkaProps = streamsBuilderBean.getStreamsConfiguration();
+
+        // Adjust these configurations for the consumer
+        kafkaProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+        kafkaProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+
+        try (KafkaConsumer<String, String> consumer = new KafkaConsumer<>(kafkaProps)) {
+            List<PartitionInfo> partitions = consumer.partitionsFor("topic1");
+
+            try (Producer<String, OffsetInfo> producer = new KafkaProducer<>(kafkaProps)) {
+                for (PartitionInfo partition : partitions) {
+                    int partitionNumber = partition.partition();
+                    OffsetInfo initialOffset = new OffsetInfo(0, partitionNumber);
+                    producer.send(new ProducerRecord<>("hydration-tracking-topic", String.valueOf(partitionNumber), initialOffset));
+                }
+            }
+        }
+
+        // Your streams processing logic
+        // For example: setup your Kafka Streams topology here
+    }
+}
