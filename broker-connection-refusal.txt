@@ -1,0 +1,2 @@
+https://github.com/confluentinc/librdkafka/wiki/FAQ#why-am-i-seeing-receive-failed-disconnected
+https://github.com/confluentinc/confluent-kafka-go/issues/559
