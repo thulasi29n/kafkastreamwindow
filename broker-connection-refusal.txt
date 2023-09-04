@@ -1,2 +1,3 @@
 https://github.com/confluentinc/librdkafka/wiki/FAQ#why-am-i-seeing-receive-failed-disconnected
 https://github.com/confluentinc/confluent-kafka-go/issues/559
+https://docs.confluent.io/platform/current/installation/configuration/broker-configs.html?_gl=1*xbbnzn*_ga*MjEzNzI2MTM2MC4xNjg5MTk2NTgw*_ga_D2D3EGKSGD*MTY5Mzg2NTk0Mi4zLjEuMTY5Mzg2NjQwMy44LjAuMA..&_ga=2.93044701.1917799673.1693865943-2137261360.1689196580
