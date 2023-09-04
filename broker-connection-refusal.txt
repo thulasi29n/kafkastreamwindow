@@ -4,3 +4,7 @@ https://docs.confluent.io/platform/current/installation/configuration/broker-con
 
 https://issues.apache.org/jira/browse/KAFKA-10682
 
+https://altarmoss.wordpress.com/category/kafka/
+
+https://groups.google.com/g/confluent-platform/c/C_5b7Oo7VI4/m/bAj8GyHGCQAJ
+
