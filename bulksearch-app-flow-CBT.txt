@@ -1,0 +1,13 @@
+Yes, Component-Based Tests (CBTs) are typically written at the level where you have the actual implementation of your business logic or main flow. In the structure you provided, `SensAIBulkSearch` is the application where the actual business logic and orchestration happen. Thus, it's the most appropriate place for CBTs.
+
+Here's why:
+
+1. **Real Implementation**: In `SensAIBulkSearch`, you're consuming the functionalities provided by starters (`filejobstarter`, `opensearchfilejobstarter`, etc.) and combining them to accomplish a real-world task. This is where you want to ensure that all these components work well together in the context of your business use case.
+
+2. **Business Logic Testing**: CBTs focus on ensuring that individual components (or groups of components) of your application work as expected in the context of real business operations. Since your main business logic is in `SensAIBulkSearch`, this is where your CBTs would be most effective.
+
+3. **End-to-End Flow**: Even though it's not full end-to-end testing, CBTs often encompass a significant portion of the system's flow. `SensAIBulkSearch` is where various components come together, making it a suitable place to write tests that ensure the entire process, from reading data from OpenSearch to processing it and potentially sending results somewhere, works correctly.
+
+4. **Isolation of External Systems**: One advantage of CBTs is that you can mock or stub out external systems to focus on testing your application's components. Given that `SensAIBulkSearch` interacts with external systems like databases and potentially other services, you'd want to write tests here that can validate your application's behavior in a controlled environment.
+
+In summary, yes, `SensAIBulkSearch` is the appropriate place to write your Component-Based Tests. Ensure that you mock/stub any external dependencies so that these tests are deterministic, repeatable, and fast.
