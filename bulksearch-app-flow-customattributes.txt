@@ -1,0 +1,62 @@
+Yes, the `OpenSearchItemReader` and `OpenSearchItemWriter` are provided by the `opensearchfilejobstarter`. If you want to customize their behavior using attributes like fetch size, partition strategy, and data source details, you can certainly do so. This typically requires a few adjustments:
+
+1. **Enhance Configuration Properties**:
+   
+   Extend the properties class in `opensearchfilejobstarter` to accommodate more configuration options.
+
+   ```java
+   @ConfigurationProperties(prefix = "opensearch")
+   public class OpenSearchProperties {
+       private String host;
+       private int port;
+       private int fetchSize;
+       private String partitionStrategy;
+       // ... any other properties ...
+
+       // Getters and setters
+   }
+   ```
+
+2. **Customize the Beans in `opensearchfilejobstarter`**:
+
+   Modify the `OpenSearchItemReader` and `OpenSearchItemWriter` to accept these properties and act accordingly. 
+
+   ```java
+   public class OpenSearchItemReader implements ItemReader<YourDataType> {
+
+       private final int fetchSize;
+
+       public OpenSearchItemReader(int fetchSize) {
+           this.fetchSize = fetchSize;
+           // Use this fetchSize in your reading logic
+       }
+       
+       // Implement reading logic
+   }
+   ```
+
+3. **Provide Properties in `SensAIBulkSearch`**:
+   
+   In the `application.properties` or `application.yml` of your main application (`SensAIBulkSearch`), provide values for these properties:
+
+   ```properties
+   opensearch.host=your-host
+   opensearch.port=your-port
+   opensearch.fetchSize=your-desired-fetch-size
+   opensearch.partitionStrategy=your-strategy
+   ```
+
+4. **Inject Customized Beans in `SensAIBulkSearch`**:
+
+   While the auto-configuration provides a default setup for the reader and writer, you can override them in your main application to customize their behavior further:
+
+   ```java
+   @Bean
+   public OpenSearchItemReader customOpenSearchItemReader(OpenSearchProperties properties) {
+       return new OpenSearchItemReader(properties.getFetchSize());
+   }
+   ```
+
+   This custom bean definition in your main application will replace the default one from the starter due to the `@ConditionalOnMissingBean` annotation in the starter's auto-configuration.
+
+Remember, the key here is flexibility and modularity. By setting up your starters in this way, you provide defaults for ease of use but also allow advanced users or specific applications to tweak the behavior to fit their needs.

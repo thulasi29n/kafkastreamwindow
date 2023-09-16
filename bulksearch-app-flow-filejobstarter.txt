@@ -1,0 +1,29 @@
+package com.yourcompany.filejobstarter.listener;
+
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Service;
+
+@Service
+public class KafkaEventListener {
+
+    @Autowired
+    private JobLauncher jobLauncher;
+
+    @Autowired
+    private Job yourJob;  // This can be injected from a registry or based on the message type
+
+    @KafkaListener(topics = "your-topic-name")
+    public void listen(String message) {
+        // Decode message and determine which job to start.
+        // You might convert the message into a set of JobParameters.
+
+        JobParametersBuilder jobParametersBuilder = new JobParametersBuilder();
+        // ... set parameters based on the decoded message ...
+
+        jobLauncher.run(yourJob, jobParametersBuilder.toJobParameters());
+    }
+}
